@@ -1,16 +1,45 @@
 import React, { useState } from "react";
 import { Todo } from "./models/model";
 import InputField from "./components/InputField/InputField";
+import TodoItem from "./components/TodoItem/TodoItem";
 
 const App: React.FC = () => {
   const [todo, setTodo] = useState<string>("");
   const [todos, setTodos] = useState<Todo[]>([]);
+  // const [completedItems, setCompletedItems] = useState<Todo[]>([]);
   console.log("todos", todos);
 
   const handleAdd = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setTodos((prev) => [...prev, { id: 1, name: todo, isDone: true }]);
+    setTodos((prev) => [
+      ...prev,
+      { id: Date.now(), name: todo, isDone: false },
+    ]);
     setTodo("");
+  };
+
+  const handleSaveEdit = ({ id, ...rest }: Todo) => {
+    const newTodos = todos.map((e) => {
+      if (e.id === id) {
+        return { id, ...rest };
+      }
+      return e;
+    });
+    setTodos(newTodos);
+  };
+
+  const handleDelete = ({ id }: Todo) => {
+    setTodos(todos.filter((e) => e.id !== id));
+  };
+
+  const handleDone = ({ id, ...rest }: Todo) => {
+    const newTodos = todos.map((e) => {
+      if (e.id === id) {
+        return { id: id, ...rest };
+      }
+      return e;
+    });
+    setTodos(newTodos);
   };
 
   return (
@@ -20,7 +49,31 @@ const App: React.FC = () => {
       </span>
       <InputField todo={todo} setTodo={setTodo} handleAdd={handleAdd} />
       {todos.map((e) => (
-        <span>{e.name}</span>
+        <>
+          {!e.isDone && (
+            <TodoItem
+              key={e.id}
+              todoItem={e}
+              handleSaveEdit={handleSaveEdit}
+              handleDelete={handleDelete}
+              handleDone={handleDone}
+            />
+          )}
+        </>
+      ))}
+      <hr></hr>
+      {todos.map((e) => (
+        <>
+          {e.isDone && (
+            <TodoItem
+              key={e.id}
+              todoItem={e}
+              handleSaveEdit={handleSaveEdit}
+              handleDelete={handleDelete}
+              handleDone={handleDone}
+            />
+          )}
+        </>
       ))}
     </div>
   );

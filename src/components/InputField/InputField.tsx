@@ -14,7 +14,8 @@ const InputField: React.FC<Props> = ({ todo, setTodo, handleAdd }) => {
   };
 
   return (
-    <form className="w-full" onSubmit={handleSubmit}>
+    // TODO: Add media query for width
+    <form className="bg-red-300 w-1/4 mx-auto" onSubmit={handleSubmit}>
       <input
         ref={inputRef}
         type="text"
