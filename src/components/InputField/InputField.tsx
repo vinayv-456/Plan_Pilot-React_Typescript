@@ -14,7 +14,7 @@ const InputField: React.FC<Props> = ({ todo, setTodo, handleAdd }) => {
   };
 
   return (
-    <form className="w-full" onSubmit={(e) => handleSubmit}>
+    <form className="w-full" onSubmit={handleSubmit}>
       <input
         ref={inputRef}
         type="text"
