@@ -15,14 +15,23 @@ const InputField: React.FC<Props> = ({ todo, setTodo, handleAdd }) => {
 
   return (
     // TODO: Add media query for width
-    <form className="bg-red-300 w-1/4 mx-auto" onSubmit={handleSubmit}>
+    <form
+      className="relative flex items-center w-1/4 h-12 mx-auto mb-9"
+      onSubmit={handleSubmit}
+    >
       <input
+        className="w-full h-full rounded-2xl p-2"
         ref={inputRef}
         type="text"
         value={todo}
         onChange={(e) => setTodo(e.target.value)}
       />
-      <button type="submit">submit</button>
+      <button
+        type="submit"
+        className="absolute right-3 bg-blue-500 p-2 rounded-full"
+      >
+        Go
+      </button>
     </form>
   );
 };

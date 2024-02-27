@@ -21,8 +21,8 @@ const App: React.FC = () => {
   const incompletedTodos = useRef<Todo[]>([]);
 
   const groups = [
-    { id: 1234, name: "pending", values: completedTodos },
-    { id: 4567, name: "completed", values: incompletedTodos },
+    { id: 122314, name: "Active Tasks", values: incompletedTodos },
+    { id: 456721, name: "Completed Tasks", values: completedTodos },
   ];
 
   useMemo(() => {
@@ -64,41 +64,19 @@ const App: React.FC = () => {
   };
 
   const onDragEnd = (result: DropResult) => {
-    const { source, destination } = result;
-    console.log("source, destination", source, destination);
-    // dropped outside the list
-    if (!destination) {
-      return;
+    const { source, destination, draggableId: taskId } = result;
+    // dropped into different list
+    if (source.droppableId !== destination?.droppableId) {
+      // toggle the isDone flag
+      setTodos(
+        todos.map((e) => {
+          if (e.id.toString() === taskId) {
+            return { ...e, isDone: !e.isDone };
+          }
+          return e;
+        })
+      );
     }
-
-    // same
-    // if (source.droppableId === destination.droppableId) {
-    //   const items = reorder(
-    //     this.getList(source.droppableId),
-    //     source.index,
-    //     destination.index
-    //   );
-
-    //   let state = { items };
-
-    //   if (source.droppableId === "droppable2") {
-    //     state = { selected: items };
-    //   }
-
-    //   this.setState(state);
-    // } else {
-    //   const result = move(
-    //     this.getList(source.droppableId),
-    //     this.getList(destination.droppableId),
-    //     source,
-    //     destination
-    //   );
-
-    //   this.setState({
-    //     items: result.droppable,
-    //     selected: result.droppable2,
-    //   });
-    // }
   };
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -107,45 +85,54 @@ const App: React.FC = () => {
           Plan Pilot
         </span>
         <InputField todo={todo} setTodo={setTodo} handleAdd={handleAdd} />
-        <hr></hr>
-        {groups.map(({ id, name, values }) => (
-          <Droppable droppableId={id.toString()}>
-            {(
-              provided: DroppableProvided,
-              snapshot: DroppableStateSnapshot
-            ) => (
-              <div ref={provided.innerRef} {...provided.droppableProps}>
-                {values.current.map((item, index) => (
-                  <Draggable
-                    key={item.id}
-                    draggableId={item.id.toString()}
-                    index={index}
-                  >
-                    {(
-                      provided: DraggableProvided,
-                      snapshot: DraggableStateSnapshot
-                    ) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <TodoItem
-                          key={item.id}
-                          todoItem={item}
-                          handleSaveEdit={handleSaveEdit}
-                          handleDelete={handleDelete}
-                          handleDone={handleDone}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        ))}
+        <div className="w-1/2 flex flex-1 mx-auto">
+          {groups.map(({ id, name, values }) => (
+            <Droppable droppableId={id.toString()}>
+              {(
+                provided: DroppableProvided,
+                snapshot: DroppableStateSnapshot
+              ) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className={`${
+                    name === "Active Tasks" ? "bg-blue-400" : "bg-red-500"
+                  } w-full flex-1 mx-1 px-2 pt-2`}
+                >
+                  <span className="text-xl text-white">{name}</span>
+                  {values.current.map((item, index) => (
+                    <Draggable
+                      key={item.id}
+                      draggableId={item.id.toString()}
+                      index={index}
+                    >
+                      {(
+                        provided: DraggableProvided,
+                        snapshot: DraggableStateSnapshot
+                      ) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="w-full"
+                        >
+                          <TodoItem
+                            key={item.id}
+                            todoItem={item}
+                            handleSaveEdit={handleSaveEdit}
+                            handleDelete={handleDelete}
+                            handleDone={handleDone}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          ))}
+        </div>
       </div>
     </DragDropContext>
   );

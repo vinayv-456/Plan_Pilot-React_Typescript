@@ -39,7 +39,7 @@ const TodoItem: React.FC<Props> = (props) => {
 
   return (
     // TODO: Add media query for width
-    <li className="bg-yellow-400 rounded-md w-1/4 hover:scale-105 h-12 mx-auto my-2 flex items-center justify-between px-4">
+    <li className="bg-yellow-400 rounded-md flex-1 hover:scale-105 h-12 mx-auto my-2 flex items-center justify-between px-4">
       {!isEdit ? (
         <span>{name}</span>
       ) : (
