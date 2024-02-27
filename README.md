@@ -1,7 +1,6 @@
 **Objective:**
 
 This project is a small exercise to become familiar with TypeScript in React. Some key learnings include:
-So of the learnings include
 1. Defining types for props (state, actions, etc.).
 2. Defining types for state and refs.
 3. Defining types for various events as parameters of functions.
