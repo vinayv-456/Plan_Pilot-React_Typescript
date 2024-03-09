@@ -12,6 +12,7 @@ import {
   DraggableStateSnapshot,
   DropResult,
 } from "react-beautiful-dnd";
+// import ForwardRefDemo from "./components/ForwardRefDemo/ForwardRefDemo";
 
 const App: React.FC = () => {
   const [todo, setTodo] = useState<string>("");
@@ -78,6 +79,10 @@ const App: React.FC = () => {
       );
     }
   };
+  // const [test, setTest] = useState(true);
+  // if (test) {
+  //   return <ForwardRefDemo />;
+  // }
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex flex-col bg-blue-500 h-screen w-screen">
