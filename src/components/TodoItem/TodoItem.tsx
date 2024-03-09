@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Todo } from "../../models/model";
 import { MdOutlineEdit } from "react-icons/md";
 import { MdDeleteOutline } from "react-icons/md";
 import { MdDone } from "react-icons/md";
 import "../styles.css";
-import EditTodo from "../EditTodo/EditTodo";
 
 interface Props {
   todoItem: Todo;
@@ -15,18 +14,30 @@ interface Props {
 
 const TodoItem: React.FC<Props> = (props) => {
   const { todoItem, handleSaveEdit, handleDelete, handleDone } = props;
-  const { name, isDone } = todoItem;
+  const { name } = todoItem;
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const [isEdit, setIsEdit] = useState(false);
+
   const handleEdit = () => {
-    setIsEdit((prev) => !prev);
-  };
-  const handleSaveChange = (newTodo: string) => {
-    handleSaveEdit({
-      ...todoItem,
-      name: newTodo,
+    setIsEdit((prev) => {
+      return !prev;
     });
-    setIsEdit(false);
+  };
+  useEffect(() => {
+    if (isEdit) {
+      inputRef.current?.focus();
+    }
+  }, [isEdit]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSaveEdit({
+        ...todoItem,
+        name: newTodo,
+      });
+      setIsEdit(false);
+    }
   };
 
   const handleItemDelete = () => {
@@ -36,14 +47,20 @@ const TodoItem: React.FC<Props> = (props) => {
   const handleItemDone = () => {
     handleDone({ ...todoItem, isDone: !todoItem.isDone });
   };
-
+  const [newTodo, setNewTodo] = useState(todoItem.name);
   return (
     // TODO: Add media query for width
     <li className="bg-yellow-400 rounded-md flex-1 hover:scale-105 h-12 mx-auto my-2 flex items-center justify-between px-4">
       {!isEdit ? (
-        <span>{name}</span>
+        <span style={{ display: !isEdit ? "block" : "none" }}>{name}</span>
       ) : (
-        <EditTodo todo={name} handleSave={handleSaveChange} />
+        <input
+          ref={inputRef}
+          type="text"
+          value={newTodo}
+          onKeyDown={handleKeyDown}
+          onChange={(e) => setNewTodo(e.target.value)}
+        />
       )}
       <div className="w-1/3 flex justify-between">
         <span className="icon" onClick={handleEdit}>
