@@ -87,7 +87,7 @@ const App: React.FC = () => {
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex flex-col bg-blue-500 h-screen w-screen">
         <span className="mx-auto my-3 text-3xl font-medium text-slate-50">
-          Plan-Pilot
+          Plan Pilot
         </span>
         <InputField todo={todo} setTodo={setTodo} handleAdd={handleAdd} />
         <div className="w-1/2 flex flex-1 mx-auto">
